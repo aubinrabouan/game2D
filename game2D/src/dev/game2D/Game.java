@@ -38,15 +38,20 @@ public class Game implements Runnable {
             return;
         }
         g = bs.getDrawGraphics();
+        //clear
+
+        g.clearRect(0,0,width, height);
+
         //Draw here !
-
-        g.fillRect(0,0,width, height);
-
+        g.setColor(Color.red);
+        g.fillRect(10, 50, 50,70);
+        g.setColor(Color.green);
+        g.fillRect(0,0,10,10);
         //End Drawing !
         bs.show();
         g.dispose();
 	}
-	
+
 	public void run() {
 		
 		init();

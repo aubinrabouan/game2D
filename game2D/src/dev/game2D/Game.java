@@ -1,13 +1,17 @@
 package dev.game2D;
 
+import dev.game2D.input.KeyManager;
 import dev.game2D.display.Display;
 import dev.game2D.gjx.Assets;
 import dev.game2D.gjx.ImageLoader;
 import dev.game2D.gjx.SpriteSheet;
+import dev.game2D.states.GameState;
+import dev.game2D.states.MenuState;
+import dev.game2D.states.State;
 
 import java.awt.*;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
+
 
 public class Game implements Runnable {
 
@@ -21,20 +25,35 @@ public class Game implements Runnable {
 	private BufferStrategy bs;
 	private Graphics g;
 
+    //States
+    private State gameState;
+    private State menuState;
+
+    //Input
+    private KeyManager keyManager;
 
 	public Game(String title, int width, int height){
 		this.width   = width;
 		this.height  = height;
 		this.title   = title;
+		keyManager = new KeyManager();
 	}
 	
 	private void init() {
 		display = new Display(title, width, height);
+		display.getFrame().addKeyListener(keyManager);
+
 		Assets.init();
+
+		gameState = new GameState(this);
+		menuState = new MenuState(this);
+		State.setState(gameState);
 	}
-	int x =0;
+
 	private void tick() {
-		x++;
+	    keyManager.tick();
+		if(State.getState() != null)
+		    State.getState().tick();
 	}
 	
 	private void render() {
@@ -49,7 +68,8 @@ public class Game implements Runnable {
         g.clearRect(0,0,width, height);
 
         //Draw here !
-		g.drawImage(Assets.grass,x,10,null);
+        if(State.getState() != null)
+            State.getState().render(g);
 
         //End Drawing !
         bs.show();
@@ -85,15 +105,14 @@ public class Game implements Runnable {
 				System.out.println("Ticks and Frames : "+ ticks);
 				ticks = 0;
 				timer = 0;
-
 			}
-
 		}
-		
 		stop();
-		
-		
 	}
+
+	public KeyManager getKeyManager(){
+	    return keyManager;
+    }
 	
 	public synchronized void start() {
 		if(running)

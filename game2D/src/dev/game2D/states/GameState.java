@@ -3,6 +3,7 @@ package dev.game2D.states;
 import dev.game2D.Game;
 import dev.game2D.entity.creatures.Player;
 import dev.game2D.gjx.Assets;
+import dev.game2D.tiles.Tile;
 
 import java.awt.*;
 
@@ -23,6 +24,7 @@ public class GameState extends State {
     @Override
     public void render(Graphics g) {
         player.render(g);
+
 
     }
 }
